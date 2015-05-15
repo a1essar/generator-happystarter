@@ -1,13 +1,15 @@
 {
     "paths": {
         "appRoot": "src",
+        "distRoot": "dist",
         "fonts": "src/fonts",
         "images": "src/images",
         "styles": "src/styles",
         "scripts": "src/scripts",
         "views": "src/views",
         "templates": "src/templates",
-        "templaesPartials": "src/templates/partials"
+        "distTemplates": "dist/templates",
+        "data": "src/data"
     },
     "configs": {
         ".editorconfig": {

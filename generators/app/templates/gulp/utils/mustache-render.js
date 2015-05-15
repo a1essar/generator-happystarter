@@ -49,10 +49,7 @@ mustacheRender = function mustacheRender(options) {
 
     function render() {
         partials = _.extend(partials, options.partials);
-
-        /* Load base view and add to all views */
-
-        var dataView = viewsLoader('../../src/client/scripts/js/views/data.js') || {};
+        var dataView = viewsLoader('../../src/views/data.js') || {};
 
         Object.keys(templates).forEach(function(key, i) {
             mustache.parse(templates[key]);

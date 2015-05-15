@@ -31,7 +31,15 @@
 
       "requirejs": "^2.1.15",
 
-      "mustache": "^1.1.0"
+      "mustache": "^1.1.0",
+      "gulp-htmlhint": "0.0.9",
+      "gulp-htmlmin": "^1.1.1",
+
+      "gulp-debug": "^2.0.1",
+      "gulp-util": "^3.0.4",
+      "gulp-plumber": "^0.6.6",
+
+      "gulp-gh-pages": "^0.4.0"
   },
   "devDependencies": {
   }

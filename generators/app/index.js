@@ -12,8 +12,7 @@ var yeoman = require('yeoman-generator'),
 
 module.exports = yeoman.generators.Base.extend({
     constructor: function () {
-        this.appRoot = config.paths.appRoot;
-
+        this.generatorConfig = config;
         yeoman.generators.Base.apply(this, arguments);
     },
 
@@ -47,7 +46,13 @@ module.exports = yeoman.generators.Base.extend({
                     type: 'input',
                     name: 'appName',
                     message: 'What\'s your app name',
-                    'default': path.basename(this.destinationRoot())
+                    'default': s(path.basename(this.destinationRoot())).capitalize().value()
+                },
+                {
+                    type: 'input',
+                    name: 'appDescription',
+                    message: 'What\'s your app description',
+                    'default': s(path.basename(this.destinationRoot() + ' — is the awesome app!')).capitalize().value()
                 },
                 {
                     type: 'confirm',
@@ -95,6 +100,7 @@ module.exports = yeoman.generators.Base.extend({
             this.props = props;
             // To access props later use this.props.someOption;
             this.appName = this.props.appName;
+            this.appDescription = this.props.appDescription;
 
             done();
         }.bind(this));
@@ -117,6 +123,12 @@ module.exports = yeoman.generators.Base.extend({
         },
         gulp: function () {
             this.copy('gulpfile.js', 'gulpfile.js');
+            this.template('gulp/_config.json', 'gulp/config.json', {_: _, paths: this.generatorConfig.paths});
+
+            this.copy('gulp/tasks/gh-pages.js', 'gulp/tasks/gh-pages.js');
+
+            this.copy('gulp/tasks/templates.js', 'gulp/tasks/templates.js');
+            this.copy('gulp/utils/mustache-render.js', 'gulp/utils/mustache-render.js');
         },
         ide: function () {
             if (this.props.ide === 'intelliJIDEA') {
@@ -141,6 +153,12 @@ module.exports = yeoman.generators.Base.extend({
             this.copy('robots.txt', config.paths.appRoot + '/' + 'robots.txt');
             this.copy('crossdomain.xml', config.paths.appRoot + '/' + 'crossdomain.xml');
             this.copy('browserconfig.xml', config.paths.appRoot + '/' + 'browserconfig.xml');
+
+            this.copy('assets/main.mustache', config.paths.templates + '/' + 'main.mustache');
+            this.copy('assets/head.mustache', config.paths.templates + '/' + 'partials/head.mustache');
+            this.copy('assets/header.mustache', config.paths.templates + '/' + 'partials/header.mustache');
+            this.copy('assets/footer.mustache', config.paths.templates + '/' + 'partials/footer.mustache');
+            this.template('assets/_data.json', config.paths.data + '/' + 'data.json');
         }
     },
 

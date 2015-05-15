@@ -1,0 +1,11 @@
+{
+  "title": "<%= appName %>",
+  "description": "<%= appDescription %>",
+  "sitemap": [
+    {
+      "title": "Main Page",
+      "name": "main",
+      "link": "/templates/main.html"
+    }
+  ]
+}

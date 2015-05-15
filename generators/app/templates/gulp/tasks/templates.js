@@ -1,42 +1,36 @@
 'use strict';
 
-var gulp = require('gulp');
-var gulpDebug = require('gulp-debug');
-var gulpChanged = require('gulp-changed');
-var gulpHtmlmin = require('gulp-htmlmin');
-var gulpHtmlhint = require("gulp-htmlhint");
-var gulpUtil = require('gulp-util');
-var gulpPlumber = require('gulp-plumber');
+var gulp = require('gulp'),
+    gulpDebug = require('gulp-debug'),
+    gulpChanged = require('gulp-changed'),
+    gulpHtmlmin = require('gulp-htmlmin'),
+    gulpHtmlhint = require('gulp-htmlhint'),
+    gulpUtil = require('gulp-util'),
+    gulpPlumber = require('gulp-plumber'),
+    config = require('../config.json'),
+    mustacheRender = require('../utils/mustache-render');
 
-var options = require('../config');
-
-var mustacheRender = require('../utils/mustache-render');
-
-/* start copy:templates */
-gulp.task('copy:templates', function (callback) {
-    return gulp.src(options.paths.templates)
-        .pipe(gulpChanged(options.paths.dest.templates))
+/* start task copy:templates */
+gulp.task('copy:templates', function () {
+    return gulp.src(config.paths.templates + '/**')
+        .pipe(gulpChanged(config.paths.distTemplates))
         .pipe(gulpDebug({title: 'copy changed templates:'}))
-        .pipe(gulp.dest(options.paths.dest.templates));
+        .pipe(gulp.dest(config.paths.distTemplates));
 });
-/* end copy:templates */
+/* end task copy:templates */
 
 /* start task: templates */
-gulp.task('templates', function(){
+gulp.task('templates', function() {
 
     /* custom reporter function for gulpHtmlhint*/
-    var reporter = function reporter(file){
-        var c = gulpUtil.colors;
-
-        var errorCount = file.htmlhint.errorCount;
-        var plural = errorCount === 1 ? '' : 's';
-
-        // Send a beep to the terminal so it bounces
-        //process.stderr.write('\x07');
+    var reporter = function reporter(file) {
+        var c = gulpUtil.colors,
+            errorCount = file.htmlhint.errorCount,
+            plural = errorCount === 1 ? '' : 's';
 
         gulpUtil.log(c.cyan(errorCount) + ' error' + plural + ' found in ' + c.magenta(file.path));
 
-        file.htmlhint.messages.forEach(function(result){
+        file.htmlhint.messages.forEach(function(result) {
             var message = result.error,
                 line = message.line,
                 col = message.col,
@@ -52,18 +46,15 @@ gulp.task('templates', function(){
     /* see all gulpHtmlmin options: https://github.com/kangax/html-minifier */
     /* see all gulpHtmlhint options: https://github.com/yaniswang/HTMLHint/wiki/Rules */
 
-    gulp.src(options.paths.mustache)
+    gulp.src(config.paths.templates + '**.mustache')
         .pipe(gulpPlumber())
-
         .pipe(mustacheRender())
-
         .pipe(gulpDebug({title: 'render changed templates:'}))
-
         .pipe(gulpHtmlhint({
             'tagname-lowercase': true,
             'attr-lowercase': true,
             'attr-value-double-quotes': false,
-            'attr-value-not-empty': true,
+            'attr-value-not-empty': false,
             'attr-no-duplication': true,
             'doctype-first': true,
             'tag-pair': true,
@@ -73,9 +64,7 @@ gulp.task('templates', function(){
             'src-not-empty': true
         }))
         .pipe(gulpHtmlhint.reporter(reporter))
-
         .pipe(gulpHtmlmin({collapseWhitespace: true}))
-
-        .pipe(gulp.dest(options.paths.dest.mustache));
+        .pipe(gulp.dest(config.paths.distTemplates));
 });
 /* end task: templates */

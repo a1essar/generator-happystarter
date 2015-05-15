@@ -9,5 +9,8 @@
         "ios >= 7",
         "android >= 4.4",
         "bb >= 10"
-    ]
+    ],
+    "paths": {<% _.forEach(paths, function(value, key) { %>
+        "<%= key %>": "<%= value %>"<%if(key !== Object.keys(paths)[Object.keys(paths).length - 1]){%>,<%}%><% }); %>
+    }
 }

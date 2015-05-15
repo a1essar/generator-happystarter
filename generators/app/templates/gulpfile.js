@@ -11,4 +11,8 @@ var del = require('del'),
     tasks = requireDir('./gulp/tasks');
 
 
-console.log(options);
+gulp.task('go', function() {
+
+});
+
+gulp.task('default', ['go']);
