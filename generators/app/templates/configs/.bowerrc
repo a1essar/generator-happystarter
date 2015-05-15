@@ -1,0 +1,10 @@
+{
+    "directory": "bower_components",
+    "cwd": "./",
+    "color": true,
+    "scripts": {
+        "preinstall": "",
+        "postinstall": "",
+        "preuninstall": ""
+    }
+}

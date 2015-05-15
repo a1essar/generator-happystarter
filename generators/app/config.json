@@ -1,0 +1,42 @@
+{
+    "paths": {
+        "appRoot": "src",
+        "fonts": "src/fonts",
+        "images": "src/images",
+        "styles": "src/styles",
+        "scripts": "src/scripts",
+        "views": "src/views",
+        "templates": "src/templates",
+        "templaesPartials": "src/templates/partials"
+    },
+    "configs": {
+        ".editorconfig": {
+            "type": "common",
+            "uses": true
+        },
+        ".gitignore": {
+            "type": "common",
+            "uses": true
+        },
+        ".gitattributes": {
+            "type": "common",
+            "uses": true
+        },
+        ".csscomb.json": {
+            "type": "css",
+            "uses": true
+        },
+        ".eslintrc": {
+            "type": "js",
+            "uses": true
+        },
+        ".jshintrc": {
+            "type": "js",
+            "uses": false
+        },
+        ".jscsrc": {
+            "type": "js",
+            "uses": false
+        }
+    }
+}
