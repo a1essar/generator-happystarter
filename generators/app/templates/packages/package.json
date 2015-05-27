@@ -30,8 +30,9 @@
       "gulp-csslint": "^0.1.5",
 
       "requirejs": "^2.1.15",
-
+<% if (props.templatesEngine === 'mustache') { %>
       "mustache": "^1.1.0",
+<% } %>
       "gulp-htmlhint": "0.0.9",
       "gulp-htmlmin": "^1.1.1",
 

@@ -43,25 +43,25 @@ module.exports = yeoman.generators.Base.extend({
                 .value(),
             prompts = [
                 {
-                    type: 'input',
                     name: 'appName',
+                    type: 'input',
                     message: 'What\'s your app name',
                     'default': s(path.basename(this.destinationRoot())).capitalize().value()
                 },
                 {
-                    type: 'input',
                     name: 'appDescription',
+                    type: 'input',
                     message: 'What\'s your app description',
                     'default': s(path.basename(this.destinationRoot() + ' — is the awesome app!')).capitalize().value()
                 },
                 {
-                    type: 'confirm',
                     name: 'gitInit',
+                    type: 'confirm',
                     message: 'Initialize git repository?'
                 },
                 {
-                    type: 'list',
                     name: 'ide',
+                    type: 'list',
                     message: 'Select development environment:',
                     choices: [
                         'IntelliJ IDEA (phpstorm, webstorm)'
@@ -87,6 +87,18 @@ module.exports = yeoman.generators.Base.extend({
                         }
 
                         return promptsConfigsChoices;
+                    }
+                },
+                {
+                    name: 'templatesEngine',
+                    type: 'list',
+                    message: 'Select templates engine:',
+                    choices: _.map(this.generatorConfig.templatesEngine, function(el, key) {
+                        return key;
+                    }),
+                    'default': 0,
+                    filter: function (value) {
+                        return s(value).trim().decapitalize().camelize().value();
                     }
                 }
             ];
@@ -118,17 +130,19 @@ module.exports = yeoman.generators.Base.extend({
             }, this);
         },
         packages: function () {
-            this.template('packages/_package.json', 'package.json');
-            this.template('packages/_bower.json', 'bower.json');
+            this.template('packages/package.json', 'package.json');
+            this.template('packages/bower.json', 'bower.json');
         },
         gulp: function () {
             this.copy('gulpfile.js', 'gulpfile.js');
-            this.template('gulp/_config.json', 'gulp/config.json', {_: _, paths: this.generatorConfig.paths});
+            this.template('gulp/config.json', 'gulp/config.json', {_: _, paths: this.generatorConfig.paths});
 
             this.copy('gulp/tasks/gh-pages.js', 'gulp/tasks/gh-pages.js');
 
-            this.copy('gulp/tasks/templates.js', 'gulp/tasks/templates.js');
-            this.copy('gulp/utils/mustache-render.js', 'gulp/utils/mustache-render.js');
+            if (this.props.templatesEngine === 'mustache') {
+                this.copy('gulp/tasks/templates.js', 'gulp/tasks/templates.js');
+                this.copy('gulp/utils/mustache-render.js', 'gulp/utils/mustache-render.js');
+            }
         },
         ide: function () {
             if (this.props.ide === 'intelliJIDEA') {
@@ -148,17 +162,27 @@ module.exports = yeoman.generators.Base.extend({
 
         },
         projectfiles: function () {
+            this.relativePathToStyles = path.relative(this.destinationRoot() + '/' + this.generatorConfig.paths.distTemplates, this.destinationRoot() + '/' + this.generatorConfig.paths.distStyles).replace(path.sep, '/');
+            this.relativePathToScripts = path.relative(this.destinationRoot() + '/' + this.generatorConfig.paths.distTemplates, this.destinationRoot() + '/' + this.generatorConfig.paths.distScripts).replace(path.sep, '/');
+
             this.copy('index.html', config.paths.appRoot + '/' + 'index.html');
             this.copy('humans.txt', config.paths.appRoot + '/' + 'humans.txt');
             this.copy('robots.txt', config.paths.appRoot + '/' + 'robots.txt');
             this.copy('crossdomain.xml', config.paths.appRoot + '/' + 'crossdomain.xml');
             this.copy('browserconfig.xml', config.paths.appRoot + '/' + 'browserconfig.xml');
 
-            this.copy('assets/main.mustache', config.paths.templates + '/' + 'main.mustache');
-            this.copy('assets/head.mustache', config.paths.templates + '/' + 'partials/head.mustache');
-            this.copy('assets/header.mustache', config.paths.templates + '/' + 'partials/header.mustache');
-            this.copy('assets/footer.mustache', config.paths.templates + '/' + 'partials/footer.mustache');
-            this.template('assets/_data.json', config.paths.data + '/' + 'data.json');
+            if (this.props.templatesEngine === 'mustache') {
+                this.copy('assets/main.mustache', config.paths.templates + '/' + 'main.mustache');
+                this.copy('assets/header.mustache', config.paths.templates + '/' + 'partials/header.mustache');
+                this.copy('assets/footer.mustache', config.paths.templates + '/' + 'partials/footer.mustache');
+                this.template('assets/head.mustache', config.paths.templates + '/' + 'partials/head.mustache');
+                this.template('assets/data.json', config.paths.data + '/' + 'data.json');
+                this.template('assets/data.js', config.paths.views + '/' + 'data.js');
+            }
+
+            if (this.props.templatesEngine === 'none') {
+                this.template('assets/main.html', config.paths.templates + '/' + 'main.html');
+            }
         }
     },
 

@@ -2,7 +2,6 @@
 
 var _ = require('underscore'),
     es = require('event-stream'),
-    fs = require('fs'),
     path = require('path'),
     mustache = require('mustache'),
     gulpUtil = require('gulp-util'),

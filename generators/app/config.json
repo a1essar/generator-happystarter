@@ -3,13 +3,19 @@
         "appRoot": "src",
         "distRoot": "dist",
         "fonts": "src/fonts",
+        "distFonts": "dist/fonts",
         "images": "src/images",
+        "distImages": "dist/images",
         "styles": "src/styles",
+        "distStyles": "dist/styles",
         "scripts": "src/scripts",
+        "distScripts": "dist/scripts",
         "views": "src/views",
+        "distViews": "dist/views",
         "templates": "src/templates",
         "distTemplates": "dist/templates",
-        "data": "src/data"
+        "data": "src/data",
+        "distData": "dist/data"
     },
     "configs": {
         ".editorconfig": {
@@ -40,5 +46,9 @@
             "type": "js",
             "uses": false
         }
+    },
+    "templatesEngine": {
+        "none": {},
+        "mustache": {}
     }
 }
